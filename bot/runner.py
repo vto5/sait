@@ -81,7 +81,6 @@ def handle_active_order(
 
     if status.status == "PARTIALLY_FILLED":
         state.add_event(f"Order {ao.order_id} partially filled {status.filled_qty:.6f}/{status.orig_qty:.6f}")
-        return
 
     if status.status in {"CANCELED", "REJECTED", "EXPIRED"}:
         state.add_event(f"Order {ao.order_id} ended with status={status.status}")
@@ -89,7 +88,7 @@ def handle_active_order(
         return
 
     age_limit = ao.created_ts + timedelta(minutes=ttl_minutes)
-    if status.status == "NEW" and datetime.utcnow() > age_limit:
+    if status.status in {"NEW", "PARTIALLY_FILLED"} and datetime.utcnow() > age_limit:
         private_client.cancel_order(symbol, ao.order_id)
         state.add_event(f"Order {ao.order_id} canceled by TTL")
         state.active_order = None
@@ -162,6 +161,7 @@ def main() -> None:
                 bid, ask = public_client.get_book_ticker(symbol)
                 xau_quote = xau_provider.fetch()
                 if xau_quote.price is None:
+                    handle_active_order(state, mode, symbol, private_client, settings.order_ttl_minutes)
                     warnings_cycle.append(xau_quote.unavailable_reason or "XAUUSD unavailable")
                     state.add_event(xau_quote.unavailable_reason or "XAUUSD unavailable")
                     state_store.save(state)
