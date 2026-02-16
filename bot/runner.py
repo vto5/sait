@@ -107,7 +107,7 @@ def main() -> None:
 
     mode = args.mode
     loop_seconds = args.loop_seconds
-    symbol = args.symbol
+    symbol = args.symbol.strip().upper()
 
     state_store = StateStore(settings.state_path)
     state = state_store.load()
@@ -158,10 +158,11 @@ def main() -> None:
             bid = ask = fair = deviation = None
 
             try:
+                handle_active_order(state, mode, symbol, private_client, settings.order_ttl_minutes)
+
                 bid, ask = public_client.get_book_ticker(symbol)
                 xau_quote = xau_provider.fetch()
                 if xau_quote.price is None:
-                    handle_active_order(state, mode, symbol, private_client, settings.order_ttl_minutes)
                     warnings_cycle.append(xau_quote.unavailable_reason or "XAUUSD unavailable")
                     state.add_event(xau_quote.unavailable_reason or "XAUUSD unavailable")
                     state_store.save(state)
@@ -179,8 +180,6 @@ def main() -> None:
 
                 if mode == "LIVE" and private_client and cycles % settings.balance_refresh_every == 0:
                     refresh_balances_live(state, private_client)
-
-                handle_active_order(state, mode, symbol, private_client, settings.order_ttl_minutes)
 
                 if state.active_order is None and not state.emergency_mode.enabled:
                     buy_level = next_buy_level(deviation, settings.thresholds.buy, state.filled_buy_levels)
