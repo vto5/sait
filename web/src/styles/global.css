@@ -1,0 +1,148 @@
+:root {
+  --color-navy: #0f2747;
+  --color-graphite: #2f3640;
+  --color-white: #ffffff;
+  --color-accent: #e6512e;
+  --color-bg: #f5f7fa;
+  --radius: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: Inter, Arial, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-graphite);
+  line-height: 1.55;
+}
+
+.container {
+  width: min(100% - 2rem, 1120px);
+  margin-inline: auto;
+}
+
+.hero {
+  background: linear-gradient(120deg, var(--color-navy), #173763);
+  color: var(--color-white);
+  padding: 4rem 0;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.section {
+  padding: 2.25rem 0;
+}
+
+.section__header h2,
+h1,
+h2,
+h3 {
+  margin: 0 0 0.8rem;
+  line-height: 1.2;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.grid--services,
+.grid--cases,
+.grid--documents {
+  grid-template-columns: 1fr;
+}
+
+.card {
+  background: var(--color-white);
+  padding: 1rem;
+  border-radius: var(--radius);
+  border: 1px solid #dbe2ea;
+}
+
+.btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 0.75rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn--primary {
+  background: var(--color-accent);
+  color: var(--color-white);
+}
+
+.btn--secondary {
+  background: transparent;
+  color: var(--color-white);
+  border: 1px solid var(--color-white);
+}
+
+.lead-form {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 620px;
+}
+
+input,
+select {
+  width: 100%;
+  margin-top: 0.35rem;
+  border: 1px solid #c7d0dc;
+  border-radius: 10px;
+  padding: 0.65rem;
+}
+
+.form-message--error {
+  color: #a10808;
+}
+
+.form-message--success {
+  color: #146c2f;
+}
+
+.contacts iframe {
+  margin-top: 1rem;
+  width: 100%;
+  min-height: 280px;
+  border: 0;
+  border-radius: var(--radius);
+}
+
+.footer {
+  padding-bottom: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .grid--services {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid--cases,
+  .grid--documents {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    padding: 5.5rem 0;
+  }
+
+  .grid--services {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .grid--cases,
+  .grid--documents {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
